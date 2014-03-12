@@ -26,7 +26,7 @@ std::vector<double> generateLogisticData() {
 
   std::uniform_real_distribution<double> uniform;
   for (auto& r : result) {
-    r = (uniform(gen) < r) ? 1.0 : 0.0;
+    r = (uniform(gen) < 1.0 / (1.0 + std::exp(-r))) ? 1.0 : 0.0;
   }
   return result;
 }
@@ -97,9 +97,11 @@ void runIsotonicRegression() {
 }
 
 bool test() {
-  std::vector<double> ys = {1, 41, 51, 1, 2, 5, 24};
-  std::vector<double> ws = {1, 2, 3, 4, 5, 6, 7};
-  std::vector<double> expected = {1.0, 13.95, 13.95, 13.95, 13.95, 13.95, 24};
+  std::vector<double>
+      ys{1, 41, 51, 1, 2, 5, 24},
+      ws{1, 2, 3, 4, 5, 6, 7},
+      expected{1.0, 13.95, 13.95, 13.95, 13.95, 13.95, 24};
+
   isotonicRegression(&ys, ws);
   for (size_t i = 0; i < ys.size(); i++) {
     if (abs(ys[i] - expected[i]) > 0.01) {
